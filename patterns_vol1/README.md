@@ -1,24 +1,21 @@
-# Patterns vol.1
+# Pattens vol.1
 
-BandcampでリリースしたPatterns vol.1 (October 22, 2025)のソースコードです
+## Execution Environment
 
+Each track was performed using its corresponding .tidal file and recorded in a single take.
 
-## 実行環境
+The audio from each orbit was recorded as a multitrack session in a DAW, where I applied post-processing such as volume balancing, EQ, and spatial effects.
 
-各トラックの.tidalファイルにより演奏し、一発録りとして収録しました。
+Tidal runs on a Raspberry Pi (4B, 8GB RAM) mounted within the modular system.
 
-orbitごとにマルチトラックとしてDAWに録音し、音量調整やEQ、空間エフェクトの追加などポストプロセスをしています。
+## Code
 
-Tidalはモジュラー上にマウントしたRaspberryPi (4B, 8GBRAM)で実行しています。
+- Each track from d1 to d8 is customized as a mono output and sent through the ES-8 audio interface.
+- The sound "midi" is connected to a Mutant Brain (Hexinverter) module for control signals.
+- The Mutant Brain configuration file is located at config_files/mb_surgery.syx.
+- Some MIDI outputs and audio signals are processed through a Generation Loss mkII unit.
 
-
-### Code
-- d1~d8の各トラックはモノラルにカスタムし、Audio I/OであるES-8から出力しています。
-- sound `"midi"`はMutant Brain (Hexinverter)に接続し、モジュールの制御に使っています。
-- - Mutant Brainの設定ファイルは`config_files/mb_surgery.syx`です。
-- MIDI outputや一部のオーディオはGeneration loss mkIIでプロセスしています。
-
-## 追加予定
+## To Be Added...
 - SCD startup file
-- modular grid link
-- custom samples
+- ModularGrid link
+- Custom samples
