@@ -1,5 +1,7 @@
 # Pattens vol.1
 
+https://hirokimatsui.bandcamp.com/album/patterns-vol-1-2
+
 ## Execution Environment
 
 Each track was performed using its corresponding .tidal file and recorded in a single take.
