@@ -1,0 +1,102 @@
+-- Track 4. all end
+
+-- ==================================================
+--                         1
+-- ==================================================
+
+-- generation loss settings
+-- model: last, noise: MILD
+
+setcps 0.55
+
+resetCycles
+
+{-
+- p "surface" : to oscillator module (qu-bit:surface)
+- d1: off grid kick
+- d2: off grid percussions
+- d3: snare
+- d6: noise pad texture
+- d7,d8: stereo noise pad texture
+-}
+  
+do
+  d7
+    $ whenmod 32 28 (|* gain 0)
+    $ sometimesBy "0.4" (|* speed (choose[2,4,0.5]))
+    $ s "atom1" # up (choose[0,2,3,5,7,10,-2])
+    # room 0.5 # sz 0.95 # n (irand 6)
+  d8
+    $ whenmod 32 28 (|* gain 0)
+    $ sometimes (|* speed (choose[0.5,0.25,2]))
+    $ s "atom1" # up (choose[0,2,3,5,7,10])
+    # room 0.5 # sz 0.95 # n (irand 5)
+
+do
+  let func = [ply 2, fast 2, hurry 2]
+      delmix = 0.0
+      deltime = (slow 4 (cosine * 0.3))
+      delfb = 0.75
+  d1
+    $ (rot "<0 1 2 3>/2" "0 0.013 0 0.035" ~>)
+    $ chunk 4 (spreadf func)
+    $ s "fgkick . ~ . ~ . fgkick? . ~ . ~ . ~ . fgkick?"
+    # legato 3 # gain 1
+    # delay delmix # delaytime deltime # delayfb delfb
+  d2
+    $ whenmod 4 3 (sometimes ((|* speed "-1") . (# legato 4)))
+    $ whenmod 4 3 (|+ n 9)
+    $ (rot "<0 1 2 3>/2" "0 0.013 0 0.035" ~>)
+    $ chunk 4 (spreadf func)
+    $ s "fgperc:5? fgperc:6? fghh fghh fgperc:13 fgperc? fghh fgperc:10?"
+    # legato 3 # gain 1 # legato 1 # shape 0.15
+    # delay delmix # delaytime deltime # delayfb delfb
+  d3
+    $ (rot "<0 1 2 3>/2" "0 0.013 0 0.035" ~>)
+    $ chunk 4 (spreadf func)
+    $ s "~ fgsd"
+    # delay delmix # delaytime deltime # delayfb delfb
+
+-- ==================================================
+--                         2
+-- ==================================================
+
+do
+  d7 silence
+  d8 silence
+
+d6
+  $ s "atom1" # up "<12 7 10 5 8 3 7 0>"
+  # n (irand 5)
+
+do
+  d7
+    $ whenmod 32 28 (|* gain 0)
+    $ sometimesBy "0.4" (|* speed (choose[2,4,0.5]))
+    $ s "atom1" # up (choose[0,2,3,5,7,10,-2])
+    # room 0.5 # sz 0.95 # n (irand 6)
+  d8
+    $ whenmod 32 28 (|* gain 0)
+    $ sometimes (|* speed (choose[0.5,0.25,2]))
+    $ s "atom1" # up (choose[0,2,3,5,7,10])
+    # room 0.5 # sz 0.95 # n (irand 5)
+
+
+-- ==================================================
+--                        ff
+-- ==================================================
+
+p "surface" -- model:10, st:12, tn:10
+  $ sometimes rev
+  $ note ("{0 3 7 10 14 15 <17 <17 22>> 19}%4" - 3)
+  # s "midi" # midichan 2
+
+do
+  d1 silence
+  d2 silence
+  d3 silence
+  d6 silence
+
+p "surface" silence
+
+hush

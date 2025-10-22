@@ -1,0 +1,138 @@
+-- Track 2. aeroSf
+
+-- ==================================================
+--                         1
+-- ==================================================
+
+setcps 0.7
+
+resetCycles
+
+{-
+- p "surface"      : to oscillator module (qu-bit:surface)
+- p "plasmavoice1" : to oscilattor module (gamechanger audio:plsamavoice)
+- d1: kick
+- d2: snare 
+- d3: complex hihat & percussion texture
+- d6: voice attack
+- d7,d8: stereo voice texture
+-}
+
+do
+  d1
+    $ whenmod 32 30 (|* gain 0)
+    $ gain "1 ~ [~ 1?] [~ <~ 1?> ~ <1? ~>]"
+    # s "[fgkick,fgkick]" # gain "1.0 0.9!3"
+  d2
+    $ whenmod 16 14 (|* speed "-1")
+    $ sometimes (off (choose[1/16,1/8,3/16]) (|* gain 0.9))
+    $ s "~ fgsd" # n 2
+  d3
+    $ whenmod 8 6 ((bite 8 "<[0*8 0*16] [0*16 0*32]>") . (|* gain 0.88))
+    $ someCyclesBy "0.2" (slow "1 2 1 2")
+    $ almostNever (ply 4)
+    $ chunk 4 (fast 2)
+    $ s "[fghh fgperc]*8" # n (irand 16)
+    # legato (choose[2,1]) # gain "[1.0 0.85 0.96 0.85]*4"
+
+
+-- Freq: Min, Model:0, Strike:12, Tone:12, Decay:13
+p "surface"
+  $ while "{f f t}%8" (slow 2)
+  $ s "midi*4"
+  # note ("{0 0 4 2 2 7 5 <11 12>}%6" + 11)
+  |- note "{0 0 0 0 <12 0>}%8"
+  # midichan 2
+
+-- ==================================================
+--                         2
+-- ==================================================
+
+do
+  let gain_patt = "[1 ~ ~ 1?] [~ 1?] [~ 1] [~ 1*2?]"
+  d1
+    $ whenmod 32 30 (|* gain 0)
+    $ gain gain_patt
+    # s "[fgkick,fgkick]" # gain ("1.0 0.9!3" - 0.1) # n 1
+  d2
+    $ rarely (off (choose[3/16,1/16]) (|* gain 0.75))
+    $ s (fast 2 "arcp(3,8,<0 2>)") # shape 0.75
+  d3
+    $ rarely (fast 2 . (# n (irand 23)))
+    $ s "fghh*8"
+  d6
+    $ whenmod 32 30 (|* gain 0)
+    -- $ rarely (|* speed 1.5)
+    $ almostNever (|* gain 0)
+    $ gain gain_patt
+    # s "88voice" # up (choose[0,4,2,-1,-5] - 1)
+    # legato 1.5 # shape 0.5 # n (irand 8) # gain 0.9
+  p "plasmavoice1"
+    $ whenmod 32 30 (|* gain 0)
+    $ slow 2
+    $ almostNever (# accelerate "0.3")
+    $ s "midi" # midichan 0
+    # note ("<0 <-5 3> <2 7> 5>" - 4)
+
+-- ==================================================
+--                         3
+-- ==================================================
+
+do
+  d1 silence
+  d2 silence
+  d3 silence
+  d6 silence  
+  p "plasmavoice1"
+    $ whenmod 32 30 (|* gain 0)
+    $ slow 2
+    $ almostNever (# accelerate "0.3")
+    $ s "midi" # midichan 0
+    # note ("<0 <-5 3> <2 7> 5>" - 4)
+
+
+-- ==================================================
+--                         4
+-- ==================================================
+do
+  d7
+    $ s "88voice*8" # legato 1 # n (irand 5)
+    # up (choose[0,2,4,5,7,-1] - 1) # gain 0.93
+  d8
+    $ s "88choir*4" # legato 1 # n (irand 5)
+    # up (choose[0,2,3,5,7,-2] - 4) # gain 0.93
+
+
+do
+  d1
+    $ whenmod 32 30 (|* gain 0)
+    $ gain "1 ~ [~ 1?] [~ <~ 1?> ~ <1? ~>]"
+    # s "[fgkick,fgkick]" # gain "1.0 0.9!3"
+  d2
+    $ whenmod 16 14 (|* speed "-1")
+    $ sometimes (off (choose[1/16,1/8,3/16]) (|* gain 0.9))
+    $ s "~ fgsd" # n 2
+  d3
+    $ whenmod 16 14 ((bite 8 "<[0*8 0*16] [0*16 0*32]>") . (|* gain 0.88))
+    $ someCyclesBy "0.2" (slow "1 2 1 2")
+    $ almostNever (ply 4)
+    $ chunk 4 (fast 2)
+    $ s "[fghh fgperc]*8" # n (irand 16)
+    # legato (choose[2,1]) # gain "[1.0 0.85 0.96 0.85]*4"
+
+-- ==================================================
+--                         5
+-- ==================================================
+
+do
+  d1 silence
+  d2 silence
+  d3 silence
+  d4 silence
+  d5 silence
+  d6 silence
+  d7 silence
+  d8 silence
+  p "plasmavoice1" silence
+
+hush

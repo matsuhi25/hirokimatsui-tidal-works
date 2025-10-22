@@ -1,0 +1,180 @@
+-- Track 3. voices
+
+-- ==================================================
+--                       1
+-- ==================================================
+
+setcps 0.7
+
+resetCycles
+
+{-
+- p "surface"      : to oscillator module (qu-bit:surface)
+- p "plasmavoice1" : to oscilattor module (gamechanger audio:plsamavoice)
+- d1: kick
+- d2: complex hihat & percussion texture
+- d3: snare
+- d6: voice texture
+- d7,d8: stereo voice texture
+-}
+
+
+d7
+  $ superimpose ((rev . (# orbit 7)))
+  $ sometimes (fast 2)
+  $ s "88voice*8" # legato (choose[1,2]) # n (irand 6) # shape 0.25
+  # up 0
+  # begin (choose[0,0.1])
+
+do
+  d1
+    $ s "[fgkick*2 ~!3] [[fgkick ~ ~ fgkick?0.75] [[~ fgkick?] ~]]"
+    # n "[0,1]" # gain 0.97
+  d2
+    $ whenmod 32 30 (# accelerate (slow 2 ((saw * saw) * (-1))))
+    $ whenmod 16 14 (ply "<[1 2] [4 8]>")
+    $ whenmod 8 6 (slow "[1 2]")
+    $ s "fghh*16"
+    # n (iter 4 (irand 12)) # legato 1 # gain "[1.0 0.9 0.975 0.925]*4"
+  d3
+    $ whenmod 16 14 (scramble 4)
+    $ whenmod 8 6 (ply 2)
+    $ whenmod 4 3 (scramble 16)
+    $ sometimes (off (choose[1/16,3/16,3/8])
+                 ((|* gain 0.9) . (# speed 0.8)))
+    $ s "~ fgsd" # lpf (range 5500 6400 rand)
+    # room 0.5 # sz 0.75 # shape 0.25
+
+
+d6
+  $ sometimes (off 0.5 (|* speed 0.5))
+  $ s "88choir/2"
+  # up (slowcat[0,2,3,-4,0,-5,-2]) # n (irand 4) # gain 0.88
+
+-- ==================================================
+--                       2
+-- ==================================================
+
+do
+  d7
+    $ superimpose ((rev . (# orbit 7)))
+    $ chunk 4 (slow 2)
+    $ sometimes (fast 2)
+    $ s "88voice*8" # legato (choose[1,2]) # n (irand 6)
+    # up (randcat[0,2,3,7,-2,-4,-5,12,8,0]) # shape 0.25
+    # begin (choose[0,0.1])
+  p "plasmavoice1" -- bass:5
+    $ note "<0 -4 -5 2>/2"
+    # s "midi" # midichan 0
+
+
+p "surface" -- model:1
+  $ s "<midi*3 ~ ~ ~>" # note (choose[0,1,2,3,7]) # midichan 2
+
+
+-- ==================================================
+--                       3
+-- ==================================================
+
+do
+  p "surface" silence
+  d6 silence
+  d7 silence
+
+do
+  d1
+    $ whenmod 16 14 (|* speed "-1")
+    $ degradeBy "0 0.25"
+    $ s "fgkick [<fgkick(3,8)? [<fgkick?0.75 ~>]>]" # 1
+  d2
+    $ whenmod 32 30 (ply "<1 [2 4]>")
+    $ whenmod 16 14 (slow 4 . ply "<2 4>")
+    $ whenmod 8 6 (ply 2)
+    $ rarely (ply (randcat[4,2]))
+    $ s "{fghh*4 fghh*2 fghh*2}%4"
+    # n (irand 24) # legato 1 # gain "[1.0 0.9 0.975 0.925]*4" # speed 0.85
+  d3  
+    $ sometimes (off (choose[1/16,3/16,3/8])
+                 ((|* gain 0.9) . (# speed 0.8)))
+    $ s "~ fgsd" # lpf (range 5500 6400 rand)
+    # n 7 # room 0.5 # sz 0.75 # shape 0.25
+
+do -- stereo choir structure
+  d7
+    $ degradeBy "0.15"
+    $ s "88choir/4" # up (choose[0,2,3,5,-2,-4,-5]) # n (irand 3)
+  d8
+    $ degradeBy "0.2"
+    $ s "<~ 88choir>/2" # up (choose[0,2,3,5,-2,-4,-5]) # n (irand 6)
+  p "surface" -- model:1
+    $ whenmod 32 16 (rarely (off 0.25 (|+ note 12)))
+    $ whenmod 16 8 (whenmod 4 1 (# midichan 12))
+    $ s "midi*2 midi ~ ~" # note (choose[0,2,3,5,7,-2,-4])
+    # midichan 2
+  p "plasmavoice1" -- bass:5
+    $ note "<0 -4 -5 2>/2" # legato 0.5
+    # s "midi" # midichan 0
+
+-- ==================================================
+--                       4
+-- ==================================================
+
+p "plasmavoice1" silence
+
+-- ==================================================
+--                       5
+-- ==================================================
+
+do
+  p "surface" silence
+  d7
+    $ superimpose ((rev . (# orbit 7)))
+    $ chunk 4 (slow 2)
+    $ sometimes (fast 2)
+    $ s "88voice*8" # legato (choose[1,2]) # n (irand 6)
+    # up (randcat[0,2,3,7,-2,-4,-5,12,8,0]) # shape 0.25
+    # begin (choose[0,0.1])
+  p "plasmavoice1" -- bass:5
+    $ note "<0 -4 -5 2>/2"
+    # s "midi" # midichan 0
+  d1
+    $ s "[fgkick*2 ~!3] [[fgkick ~ ~ fgkick?0.75] [[~ fgkick?] ~]]"
+    # n "[0,1]" # gain 0.97
+  d2
+    $ whenmod 32 30 (# accelerate (slow 2 ((saw * saw) * (-1))))
+    $ whenmod 16 14 (ply "<[1 2] [4 8]>")
+    $ whenmod 8 6 (slow "[1 2]")
+    $ s "fghh*16"
+    # n (iter 4 (irand 12)) # legato 1 # gain "[1.0 0.9 0.975 0.925]*4"
+  d3
+    $ whenmod 16 14 (scramble 4)
+    $ whenmod 8 6 (ply 2)
+    $ whenmod 4 3 (scramble 16)
+    $ sometimes (off (choose[1/16,3/16,3/8])
+                 ((|* gain 0.9) . (# speed 0.8)))
+    $ s "~ fgsd" # lpf (range 5500 6400 rand)
+    # room 0.5 # sz 0.75 # shape 0.25
+  
+d6
+  $ sometimes (off 0.5 (|* speed 0.5))
+  $ s "88choir/2"
+  # up (slowcat[0,2,3,-4,0,-5,-2]) # n (irand 4) # gain 0.88
+
+do
+  d2 silence
+  d3 silence
+
+do
+  p "plasmavoice1" silence
+  d6 silence
+  d7
+    $ superimpose ((rev . (# orbit 7)))
+    $ chunk 4 (slow 2)
+    $ sometimes (fast 2)
+    $ s "88voice*8" # legato (choose[1,2]) # n (irand 6) # shape 0.25
+    # up 0
+    # begin (choose[0,0.1])
+
+hush
+
+

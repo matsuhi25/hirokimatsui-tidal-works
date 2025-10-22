@@ -1,0 +1,163 @@
+-- Track 1. ttpm5
+
+-- ==================================================
+--                       1
+-- ==================================================
+
+setcps 0.7
+
+resetCycles
+
+{-
+- p "surface"      : to oscillator module (qu-bit:surface)
+- p "plasmavoice1" : to oscilattor module (gamechanger audio:plsamavoice)
+- d1: kick
+- d2: complex hihat
+- d3: snare
+- d4: percussion
+- d7,d8: stereo voice texture
+-}
+
+
+-- to module (QU-BIT:Surface)
+p "surface" -- Freq: Min, Model:10, Strike:10, Tone:10, Decay:Max
+  -- $ someCyclesBy "0.15" (slow 4)
+  $ sometimes rev
+  $ note "{0 3 7 10 14 15 <17 <17 22>> 19}%4"
+  # s "midi" # midichan 2
+
+do
+  d1
+    $ someCyclesBy 0.2 (stutWith 4 (3/8)
+                        ((|* gain 0.9) . (|* speed 1.5)))
+    $ rarely (off (1/16) (|* gain 0.9))
+    $ s "fgkick"
+  p "plasmavoice1" -- bass:7
+    $ note "<0 <7 -5> 2 <3 5>>/2" # s "midi" # midichan 0
+  d2
+    $ someCyclesBy "0.1" (slow 2)
+    $ whenmod 16 14( (ply "<2 4>") . (|* gain 0.85))
+    $ whenmod 8 6 (slow 8 . ply 8)
+    $ almostNever ((ply 4) . (# legato 1))
+    $ chunk 4 (slow 4)
+    $ s "fghh*16" # n (irand 12) # gain "[1.0 0.77 0.9 0.77]*4" # shape 0.4
+  d3
+    $ sometimes (off (choose[1/16,3/16,1/8,1/12]) (|* gain 0.9))
+    $ s "~  fgsd" # shape 0.25 # n 1 # gain "{1.0 0.95 0.925}%8"
+  d4
+    $ someCyclesBy "0.1" (slow 2)
+    $ ("{0 0.001 0 0.00035}%8" ~>) $ chunk 4 (fast 2)
+    $ s "[fgperc fgperc ~ fgperc]*2" # n (irand 24) # legato 1
+    # room 0.99 # sz 0.9 # lpf (range 1800 2400 rand) # lpq 0.1
+    # gain "[0.95 0.85 1.0 0.85]*4" |* gain 0.65    
+
+
+do
+  d7
+    $ someCyclesBy 0.15 (# accelerate (randcat[0.5,-1]))
+    $ degradeBy "0.345"
+    $ s "<~ bkvox:1>" # up ((choose[0,2,3,5,7,-2]) -4) # gain 0.85
+    # room 0.99 # sz 0.99
+  d8
+    $ someCyclesBy 0.15 (# accelerate (randcat[0.5,-0.5]))
+    $ degradeBy "0.278"
+    $ s "<bkvox:1 ~>" # up ((choose[0,2,3,5,7,-2,-4]) -4) # gain 0.85
+    # room 0.99 # sz 0.99
+
+-- ==================================================
+--                         2
+-- ==================================================
+
+do
+  p "surface" -- model: ep0
+    $ sometimesBy "0.379" ((|+ note 12) . (fast 2))
+    $ rarely (slow 2) 
+    $ note ("{0 7 2 3 -2 2 <-5 10> <-2 7>}%4")
+    # s "midi" # midichan 2
+  d1
+    $ rarely (off (choose[3/8,5/8]) (|* gain 0.95))
+    $ sometimes (off (1/16) (|* gain 1))
+    $ s "fgkick" # gain 1.1
+  d2
+    $ whenmod 16 14( (ply "<2 4>") . (|* gain 0.8))
+    $ whenmod 8 6 (slow 8 . ply 8)    
+    $ sometimesBy "[0 0.222]*4" (plyWith 4 ((|+ n 1) . (|* gain 0.8)))
+    $ rarely (off (choose[1/16,3/16]) (|* gain 1.1))
+    $ chunk "<2 4>" (slow 2)
+    $ s "fghh*8" # n (irand 16) # gain "[0.9 1.0]*4"
+  d4 silence
+  d6
+    $ degradeBy "0.345"
+    $ s "bkvox:1*8" # up ((randcat[0,2,3,5,7,-2]) -4)
+    # gain (range 0.5 0.95 saw) # begin (range 0 0.8 (saw))
+    # room 0.99 # sz 0.99 # legato 2
+
+
+-- ==================================================
+--                          3
+-- ==================================================
+
+do
+  p "surface" -- model: ep0
+    -- $ someCyclesBy "0.15" (slow 4)
+    $ sometimes rev
+    $ note "{0 3 7 10 14 15 <17 <17 22>> 19}%4"
+    # s "midi" # midichan 2
+  d1 silence
+  d2 silence
+  d3 silence
+  d6 silence
+  d7 silence
+  d8 silence
+
+do
+  d1
+    $ someCyclesBy 0.2 (stutWith 4 (3/8)
+                        ((|* gain 0.9) . (|* speed 1.5)))
+    $ rarely (off (1/16) (|* gain 0.9))
+    $ s "fgkick" # gain 1.1
+  p "plasmavoice1" -- bass:7
+    $ note "<0 <7 -5> 2 <3 5>>/2" # s "midi" # midichan 0
+  d2
+    $ someCyclesBy "0.1" (slow 2)
+    $ whenmod 16 14( (ply "<2 4>") . (|* gain 0.9))
+    $ whenmod 8 6 (slow 8 . ply 8)
+    $ almostNever ((ply 4) . (# legato 1))
+    $ chunk 4 (slow 4)
+    $ s "fghh*16" # n (irand 12) # gain "[1.0 0.77 0.9 0.77]*4" # shape 0.4
+  d3
+    $ sometimes (off (choose[1/16,3/16,1/8,1/12]) (|* gain 0.9))
+    $ s "~  fgsd" # shape 0.25 # n 1 # gain "{1.0 0.95 0.925}%8"
+  d4
+    $ someCyclesBy "0.1" (slow 2)
+    $ ("{0 0.001 0 0.00035}%8" ~>) $ chunk 4 (fast 2)
+    $ s "[fgperc fgperc ~ fgperc]*2" # n (irand 24) # legato 1
+    # room 0.99 # sz 0.9 # lpf (range 1800 2400 rand) # lpq 0.1
+    # gain "[0.95 0.85 1.0 0.85]*4" |* gain 0.65    
+
+do
+  d7
+    $ someCyclesBy 0.15 (# accelerate (randcat[0.5,-1]))
+    $ degradeBy "0.345"
+    $ s "<~ bkvox:1>" # up ((choose[0,2,3,5,7,-2]) -4) # gain 0.85
+    # room 0.99 # sz 0.99
+  d8
+    $ someCyclesBy 0.15 (# accelerate (randcat[0.5,-0.5]))
+    $ degradeBy "0.278"
+    $ s "<bkvox:1 ~>" # up ((choose[0,2,3,5,7,-2,-4]) -4) # gain 0.85
+    # room 0.99 # sz 0.99
+
+
+do
+  p "plasmavoice1" silence
+  d1 silence
+  d2 silence
+  d3 silence
+  d4 silence
+  d5 silence
+  d6 silence
+  d7 silence
+  d8 silence
+
+
+hush
